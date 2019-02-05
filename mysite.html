@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html>
+<style>
+#container {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  background: yellow;
+}
+#animate {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: red;
+}
+</style>
+
 <head>
 	<title>Andy's website!</title>
 </head>
@@ -9,27 +24,7 @@
 	<p>I am a 16 yr old who lives in the US currently.</p>
 
 	<p>I am an epic gamer, meaning that I play games games made by
-	Epic Games
-	<sup>
-		<sup>
-			<sub>
-				<sub>
-					<sup>
-						<sup>
-							<sub>
-								<sub>
-									<sup>
-										TM
-									</sup>
-								</sub>
-							</sub>
-						</sup>
-					</sup>
-				</sub>
-			</sub>
-		</sup>
-	</sup> 
-	such as Minecraft, agario, and fortnite.io
+	Epic Games such as Minecraft, agario, and fortnite.io
 	</p>
 
 	<h1 style="background-color: rgb(0, 255, 255);">
@@ -37,19 +32,7 @@
 	</h1>
 
 	<p style="color: rgb(103, 201, 235)">
-		playing minecraft, watching youtube, I also play badminton sometimes. I love scratch.
-		<sup>
-			<sup>
-				<sup>
-					<sub>
-						<del>
-							and trolling noobs
-						</del>
-					</sub>
-				</sup>
-			</sup>
-		</sup>
-	</p>
+		playing minecraft, watching youtube, I also play badminton sometimes. I love scratch.<del> and trolling noobs</del>
 
 	<h1 style="color: green">
 		languages that I know:
@@ -61,7 +44,7 @@
 		*French<br>
 	</p>
 
-	<p style="color:rgb(255, 99, 255);">
+	<p id='hidden' style="color:rgb(255, 99, 255);">
 		*Python<br>
 		*Java<br>
 		*Rust<br>
@@ -73,6 +56,13 @@
 		*TI-BASIC<br>
 		*Scratch<br>
 		*BrainF<br>
+
+
+	<div id='animate'></div>
+
+	<p><button onclick="myMove()">Click Me</button>hi</p> 
+	<script src='script.js'></script>
+
 	
 
 </body>
