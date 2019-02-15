@@ -1,106 +1,119 @@
+function play(){
+	var canvas = document.getElementById("game");
+	var ctx = canvas.getContext("2d");
+	ctx.fillStyle = "#FF0000";
 
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-ctx.fillStyle = "#FF0000";
-
-
-ctx.fillRect(0, 0, 150, 75);
-ctx.moveTo(0, 0);
-ctx.lineTo(100, 150);
-ctx.stroke();
-
-
-//half a circle
-ctx.beginPath();
-ctx.arc(300, 300, 50, Math.PI / 2, Math.PI);
-ctx.stroke();
-
-var grd = ctx.createLinearGradient(0, 0, 200, 0);
-grd.addColorStop(0, "red");
-grd.addColorStop(1, "white");
-
-ctx.fillStyle = grd;
-ctx.fillRect(0, 300, 200, 100);
-
-ctx.font = "30px Arial";
-ctx.fillStyle = 'green';
-ctx.textAlign = 'center';
-ctx.fillText("Hello World", 300, 50);
-
-
-
-
-window.onload = function() {
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    var img = document.getElementById("mineblox");
-    ctx.drawImage(img, 0, 450);
-    drawClock();
-    setInterval(drawClock, 1000);
-}
-
-//drawing a clock
-function drawClock() {
-	ctx.fillStyle = "#AC22FF";
-	ctx.fillRect(500, 100, 300, 300);
-
-	var clockX = 500 + 150;
-	var clockY = 100 + 150;
-
-	//clock outer ring
-	drawCircle(clockX, clockY, 145, '#AAAAAA');
-	//inner ring
-	drawCircle(clockX, clockY, 140, '#888888');
-	//dot in the middle
-	drawCircle(clockX, clockY, 20, '#555555');
-
-	drawNumbers();
-
-	drawHands();
-}
-
-
-function drawCircle(x, y, r, color) {
-	ctx.beginPath();
-	ctx.arc(x, y, r, 0, Math.PI * 2);
-	ctx.fillStyle = color;
-	ctx.fill();
-}
-
-const angle30 = Math.PI / 6;
-const angle90 = Math.PI / 2;
-
-function drawNumbers() {
-	
-	for (var i = 1; i < 13; i ++) {
-		ctx.fillText(i, 
-			Math.cos(i * angle30 - angle90) * 100 + 650, 
-			Math.sin(i * angle30 - angle90) * 100 + 250);
-	}
-}
-
-
-function drawHands() {
-	var now = new Date();
-	var hour = now.getHours();
-	var minute = now.getMinutes();
-	var second = now.getSeconds();
-
-	hand(hour % 12);
-	hand(minute / 5);
-	hand(second / 5);
-
-	// console.log(now);
-
-	function hand(timeValue) {
-		ctx.moveTo(650, 250);
-		var xPos = Math.cos(timeValue * angle30 - angle90) * 100 + 650;
-		var yPos = Math.sin(timeValue * angle30 - angle90) * 100 + 250;
-		ctx.lineTo(xPos, yPos);
-		ctx.stroke();
+	function drawCircle(x, y, r, color) {
+		ctx.beginPath();
+		ctx.arc(x, y, r, 0, Math.PI * 2);
+		ctx.fillStyle = color;
+		ctx.fill();
 	}
 
+	function obstacle(x) {
+		this.x = x;
+		this.width = 30;
+		// if (Math.random() < 0.5) {
+			this.y = 0;
+			this.height = Math.random() * 200 + 50;
+		// } else {
+		// 	this.y = Math.random() * 200 + 50;
+		// 	this.height = 400;
+		// }
+	}
+
+	function lose() {
+		clearInterval(timer);
+		ctx.font = '50px Arial';
+		ctx.fillStyle = '#000000';
+		ctx.fillText("you lost!", 100, 100);
+	}
+
+	var pipes = [];
+
+
+
+
+	var player = {
+		x: 10,
+		y: 0,
+		r: 10,
+		color: '#33A4DD',
+		dy: 0,
+		atBottom: false,
+
+		buttonClick: function() {
+			this.atBottom = false;
+			this.dy = Math.abs(this.dy) - 10;
+			
+		},
+
+		checkCollision: function() {
+			for (var i = 0; i < pipes.length; i ++) {
+				var obj = pipes[i];
+				var xInRange = Math.abs((obj.x + obj.width / 2) - this.x) < this.r + obj.width / 2;
+				var yInRange = Math.abs(this.y - (obj.y + obj.height)) < this.r;
+				console.log(xInRange);
+				if (xInRange && yInRange) {
+					lose();
+				}
+			}
+		},
+
+		nextFrame: function() {
+			var gravity = 0.7;
+
+			// if (this.atBottom === false) {
+				this.dy = (this.dy + gravity) * 0.9;
+				this.y += this.dy;
+			// }
+
+			if (this.y + this.r > canvas.height) { 
+				// this.atBottom = true; 
+				lose();
+			}	
+			this.checkCollision();
+		}
+	}
+
+
+
+	var obj = obstacle(100);
+
+	console.log('first y: ' + player.y);
+
+
+	var iteratons = 0;
+	function nextFrame() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		player.nextFrame();
+		
+
+
+		drawCircle(player.x, player.y, player.r, player.color);
+
+		for (var i = 0; i < pipes.length; i ++) {
+			var obj = pipes[i]
+			ctx.fillStyle = '#33DD77';
+			ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+
+			pipes[i].x -= 1;
+		}
+
+		if (iteratons % 200 === 0) {
+			pipes.push(new obstacle(400));
+		}
+
+		iteratons += 1;
+
+
+	}
+
+
+	var timer = setInterval(nextFrame, 17);
 }
 
-console.log('reached the end of the program');
+play();
+
+
 
