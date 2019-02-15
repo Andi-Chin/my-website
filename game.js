@@ -14,7 +14,7 @@ function obstacle(x) {
 	this.x = x;
 	this.width = 30;	
 	this.y = 0;
-	this.height = Math.random() * 200 + 50;
+	this.height = Math.random() * 200 + 20;
 
 }
 
@@ -22,12 +22,13 @@ function lose() {
 	clearInterval(timer);
 	ctx.font = '50px Arial';
 	ctx.fillStyle = '#000000';
-	ctx.fillText("you lost!", 100, 100);
+	ctx.fillText("you lost! score: " + iteratons, 100, 300);
+
 }
 
 var pipes = [];
-
-
+var timer;
+var started = false;
 
 
 var player = {
@@ -39,6 +40,11 @@ var player = {
 	atBottom: false,
 
 	buttonClick: function() {
+		if (! started) {
+			started = true;
+			
+			timer = setInterval(nextFrame, 17);
+		}
 		this.atBottom = false;
 		this.dy = Math.abs(this.dy) - 10;
 		
@@ -74,9 +80,8 @@ var player = {
 
 
 
-var obj = obstacle(100);
 
-console.log('first y: ' + player.y);
+
 
 
 var iteratons = 0;
@@ -97,7 +102,7 @@ function nextFrame() {
 	}
 
 	if (iteratons % 200 === 0) {
-		pipes.push(new obstacle(400));
+		pipes.push(new obstacle(1000));
 	}
 
 	iteratons += 1;
@@ -106,7 +111,6 @@ function nextFrame() {
 }
 
 
-var timer = setInterval(nextFrame, 17);
 
 
 
